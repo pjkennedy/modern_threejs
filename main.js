@@ -17,8 +17,8 @@ renderer.setSize(innerWidth, innerHeight)
 renderer.setPixelRatio(devicePixelRatio)
 document.body.appendChild(renderer.domElement)
 
-/*
-/// removing the yellow box
+
+/// removing the yellow box ///
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1)
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff00})
 //console.log(boxGeometry)
@@ -27,7 +27,9 @@ const material = new THREE.MeshBasicMaterial({ color: 0x00ff00})
 const mesh = new THREE.Mesh( boxGeometry, material)
 //console.log(mesh)
 scene.add(mesh)
-*/
+/// end removing the yellow box code ///
+
+
 camera.position.z = 5
 
 const planeGeometry = new THREE.PlaneGeometry(5, 5, 10, 10)
@@ -43,9 +45,10 @@ scene.add(planeMesh)
 function animate() {
   requestAnimationFrame(animate)
   renderer.render(scene, camera)
-  ///mesh.rotation.x += 0.01
-  ///mesh.rotation.y += 0.01
-  ///planeMesh.rotation.x += 0.01    // if you don't want the plane to rotate
+  /// next two are for the yellow box; comment out if not needed ///
+  mesh.rotation.x += 0.01
+  mesh.rotation.y += 0.01
+  planeMesh.rotation.x += 0.01    // if you don't want the plane to rotate
   
 } 
 
