@@ -11,6 +11,6 @@ npm run dev  # which runs it as well
 Then install threejs @ 0.26.1 for this space-invader project -
 npm i three@0.126.1
 
-/ Option 1: Import the entire three.js core library.
+// Option 1: Import the entire three.js core library.
 import * as THREE from 'three';
 
