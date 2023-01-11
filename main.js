@@ -1,7 +1,8 @@
-//import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
+//import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js'
+import {OrbitControls} from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls'
 
-// Import the entire three.js core library, if needed
-import * as THREE from 'three';
+import * as THREE from 'three'
+//import {OrbitControls} from 'three'  //not compatible    
 import * as dat from 'dat.gui'
 
 const gui = new dat.GUI()
@@ -59,6 +60,8 @@ renderer.setSize(innerWidth, innerHeight)
 renderer.setPixelRatio(devicePixelRatio)
 document.body.appendChild(renderer.domElement)
 
+new OrbitControls(camera, renderer.domElement)
+
 
 /// removing the yellow box; next two ///
 ///const boxGeometry = new THREE.BoxGeometry(1, 1, 1)
@@ -104,6 +107,13 @@ const light = new THREE.DirectionalLight(
 )
 light.position.set(0, 0, 1)
 scene.add(light)
+
+
+const backLight = new THREE.DirectionalLight(
+  0xffffff, 1
+)
+backLight.position.set(0, 0, -1)
+scene.add(backLight)
 
 function animate() {
   requestAnimationFrame(animate)
