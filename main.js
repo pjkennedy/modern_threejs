@@ -10,23 +10,27 @@ import * as dat from 'dat.gui'
 const gui = new dat.GUI()
 const world = {
   plane: {
-    width: 19,
-    height: 19,
-    widthSegments: 17,
-    heightSegments: 17
+    width: 400,
+    height: 400,
+    widthSegments: 24,
+    heightSegments: 24
   }  
 }
-gui.add(world.plane, 'width', 1, 50).
+gui.add(world.plane, 'width', 1, 500).
   onChange(generatePlane)  
 
-  gui.add(world.plane, 'height', 1, 50).
+gui.add(world.plane, 'height', 1, 500).
   onChange(generatePlane)
 
-  gui.add(world.plane, 'widthSegments', 1, 50).
+gui.add(world.plane, 'widthSegments', 1, 100).
   onChange(generatePlane)
 
-  gui.add(world.plane, 'heightSegments', 1, 50).
+gui.add(world.plane, 'heightSegments', 1, 100).
   onChange(generatePlane)
+
+// not as performant, but got the code to work this way;
+// good for the develop cycle anyway...
+let array = []
 
 function generatePlane() {
   planeMesh.geometry.dispose()
@@ -36,18 +40,34 @@ function generatePlane() {
      world.plane.widthSegments, 
      world.plane.heightSegments)
 
-    const {array} = planeMesh.geometry
-    .attributes.position
-    for( let i = 3; i < array.length; i+=3)
-      {
+
+  //breaking issue - originalPostion must be here, vice below
+  // with randomValues and array
+
+    // vertice position randomization
+    array = planeMesh.geometry.attributes.position.array
+    const randomValues = []
+    for (let i = 0; i < array.length; i++) {
+      if (i % 3 === 0) {
         const x = array[i]
-        const y = array[i+1]
-        const z = array[i+2]
-        
-        array[i + 2] = Math.random()
+        const y = array[i + 1]
+        const z = array[i + 2]
+
+        array[i] = x + (Math.random() - 0.5) * 3
+        array[i + 1] = y + (Math.random() - 0.5) * 3
+        array[i + 2] = z + (Math.random() - 0.5) * 10
       }
 
-  
+      randomValues.push(Math.random() * Math.PI * 2 )
+    }
+    
+    planeMesh.geometry.attributes.position.randomValues = randomValues
+
+    planeMesh.geometry.attributes.position.originalPosition = planeMesh.geometry.attributes.position.array
+
+    console.log(planeMesh.geometry.attributes.position)
+
+
     const colors = []
     for (let i = 0; i < planeMesh.geometry.attributes.position.count; i++) {
       colors.push(0, 0.19, 0.4)
@@ -90,7 +110,7 @@ new OrbitControls(camera, renderer.domElement)
 /// end removing the yellow box code ///
 
 
-camera.position.z = 5
+camera.position.z = 40
 
 const planeGeometry = new THREE.PlaneGeometry(
                                 world.plane.width, 
@@ -107,33 +127,12 @@ const planeMesh = new THREE.Mesh(
   planeGeometry, planeMaterial
 )
 scene.add(planeMesh) 
-
-const {array} = planeMesh.geometry
-.attributes.position
-// changing back to 'let i = 0' (vice 3)
-for( let i = 0; i < array.length; i+=3)
-  {
-    const x = array[i]
-    const y = array[i+1]
-    const z = array[i+2]
-    
-    array[i + 2] = Math.random()
-  }
-
-const colors = []
-for (let i = 0; i < planeMesh.geometry.attributes.position.count; i++) {
-  colors.push(0, 0.19, 0.4)
-}
-
-planeMesh.geometry.
-  setAttribute('color', new THREE.BufferAttribute(new 
-      Float32Array(colors), 3)
-  ) 
+generatePlane()
 
 const light = new THREE.DirectionalLight(
   0xffffff, 1
 )
-light.position.set(0, 0, 1)
+light.position.set(0, -1, 1)
 scene.add(light)
 
 
@@ -148,16 +147,34 @@ const mouse = {
   y: undefined
 }
 
+let frame = 0
 function animate() {
   requestAnimationFrame(animate)
   renderer.render(scene, camera)
-  /// next two are for the yellow box; comment out if not needed ///
-  ///mesh.rotation.x += 0.01
-  ///mesh.rotation.y += 0.01
-  /// and stop rotation the red plane too
-  ///planeMesh.rotation.x += 0.01    // if you don't want the plane to rotate
-
   raycaster.setFromCamera(mouse, camera)
+
+  frame += 0.01
+
+  // when I moved this from above, it broke
+  
+  const {
+    /* array, */
+    originalPosition,
+    randomValues
+  } = planeMesh.geometry.attributes.position
+  
+  for (let i = 0; i < array.length; i += 3) {
+    // x
+    array[i] = originalPosition[i] + Math.cos(frame + randomValues[i]) * 0.01
+
+    // y
+    array[i + 1] =
+      originalPosition[i + 1] + Math.sin(frame + randomValues[i + 1]) * 0.001
+  }
+
+  planeMesh.geometry.attributes.position.
+    needsUpdate = true  
+
   const intersects = raycaster
     .intersectObject(planeMesh)
   if (intersects.length > 0) {
