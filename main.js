@@ -29,7 +29,7 @@ gui.add(world.plane, 'heightSegments', 1, 100).
   onChange(generatePlane)
 
 // not as performant, but got the code to work this way;
-// good for the develop cycle anyway...
+// good for the development cycle anyway...
 let array = []
 
 function generatePlane() {
