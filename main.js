@@ -303,3 +303,27 @@ window.addEventListener('mousemove', (e) => {
   mouse.y = -(e.clientY / innerHeight) * 2 + 1
   //console.log(mouse)
 })
+
+gsap.to('#patrickKennedy', {
+  opacity: 1,
+  duration: 1.5,
+  y: 0,
+  ease: 'expo'
+})
+
+gsap.to('#oneWithAn', {
+  opacity: 1,
+  duration: 1.5,
+  delay: 0.3,
+  y: 0,
+  ease: 'expo'
+})
+
+
+gsap.to('#viewWorksBtn', {
+  opacity: 1,
+  duration: 1.5,
+  delay: 0.6,
+  y: 0,
+  ease: 'expo'
+})
