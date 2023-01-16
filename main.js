@@ -12,8 +12,8 @@ const world = {
   plane: {
     width: 400,
     height: 400,
-    widthSegments: 24,
-    heightSegments: 24
+    widthSegments: 50,
+    heightSegments: 50
   }  
 }
 gui.add(world.plane, 'width', 1, 500).
@@ -110,7 +110,7 @@ new OrbitControls(camera, renderer.domElement)
 /// end removing the yellow box code ///
 
 
-camera.position.z = 40
+camera.position.z = 50
 
 const planeGeometry = new THREE.PlaneGeometry(
                                 world.plane.width, 
@@ -320,10 +320,39 @@ gsap.to('#oneWithAn', {
 })
 
 
-gsap.to('#viewWorksBtn', {
+gsap.to('#viewWorkBtn', {
   opacity: 1,
   duration: 1.5,
   delay: 0.6,
   y: 0,
   ease: 'expo'
+})
+
+let viewWork = document.querySelector('#viewWorkBtn')
+
+  viewWork.addEventListener('click', (event) => {
+    event.preventDefault()
+    //console.log('go')  
+    
+  gsap.to("#container", {
+    opacity: 0
+  })
+  gsap.to(camera.position, {
+    z: 25,
+    ease: 'power3.inOut',
+    duration: 1.5
+  })
+  gsap.to(camera.rotation, {
+    x: 1.57,
+    ease: 'power3.inOut',
+    duration: 3
+  })
+  gsap.to(camera.position, {
+    y: 1000,
+    ease: 'power3.in',
+    duration: 1,
+    delay: 2
+  })
+  
+
 })
